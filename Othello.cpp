@@ -132,6 +132,9 @@ bool Othello::isPuttable(int othello[8][8], int x, int y, int nowColor){
   int i;
   int wayX = 0, wayY = 0;
   bool res = false;
+  if(othello[y][x] != 0){
+    return false;
+  }
   for(i = 0;i < 8;i++){
     switch(i){
       case 0: wayX = 0; wayY = -1; break;
