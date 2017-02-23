@@ -9,7 +9,6 @@ Othello::Othello(){
     for(j = 0;j < 8;j++){
       othello[i][j] = 0;
     }
-    printf("\n");
   }
   othello[3][3] = 1;
   othello[3][4] = 2;
@@ -27,10 +26,30 @@ void Othello::start(Player *player1, Player *player2){
   mainLoop();
 }
 
+int Othello::getNowColor(){
+  return nowColor;
+}
+
+std::vector<std::tuple<int, int>> Othello::getPuttable(int Othello[8][8], int nowColor){
+  int i, j;
+  std::vector<std::tuple<int, int>> res;
+  for(i = 0;i < 8;i++){
+    for(j = 0;j < 8;j++){
+      if(isPuttable(othello, j, i, nowColor)){
+        res.push_back(std::make_tuple(j, i));
+      }
+    }
+  }
+  return res;
+}
+
 void Othello::mainLoop(){
   //while(true){
-    system("clear");
-    printOthello();
+  system("clear");
+  auto puttablePoint = getPuttable(othello, nowColor);
+  penetratePuttable(puttablePoint);
+  printOthello();
+  depenetratePuttable();
   //}
 }
 
@@ -42,8 +61,72 @@ void Othello::printOthello(){
         case 0: printf(" "); break;
         case 1: printf("O"); break;
         case 2: printf("X"); break;
+        case 3: printf("*"); break;
       }
     }
     printf("\n");
+  }
+}
+
+bool Othello::isPuttable(int othello[8][8], int x, int y, int nowColor){
+  int i;
+  int tempX = 0, tempY = 0;
+  int wayX = 0, wayY = 0;
+  int anotherColor = nowColor == 1 ? 2 : 1;
+  bool res = false;
+  bool differentFlag = false;
+  for(i = 0;i < 8;i++){
+    switch(i){
+      case 0: wayX = 0; wayY = -1; break;
+      case 1: wayX = 1; wayY = -1; break;
+      case 2: wayX = 1; wayY = 0;break;
+      case 3: wayX = 1; wayY = 1; break;
+      case 4: wayX = 0; wayY = 1; break;
+      case 5: wayX = -1; wayY = 1; break;
+      case 6: wayX = -1; wayY = 0;break;
+      case 7: wayX = -1; wayY = -1; break;
+    }
+    tempX = x;
+    tempY = y;
+    differentFlag = false;
+    while(true){
+      if(tempX + wayX < 0 || tempX + wayX > 7){
+        break;
+      }
+      tempX += wayX;
+      if(tempY + wayY < 0 || tempY + wayY > 7){
+        break;
+      }
+      tempY += wayY;
+      if(differentFlag == false && othello[tempY][tempX] != anotherColor){
+        break;
+      }
+      if(differentFlag == true && othello[tempY][tempX] == nowColor){
+        res = true;
+        break;
+      }
+      if(othello[tempY][tempX] == anotherColor){
+        differentFlag = true;
+      }
+    }
+  }
+  return res;
+}
+
+void Othello::penetratePuttable(std::vector<std::tuple<int, int> > puttable){
+  int i;
+  for(i = 0;i < puttable.size();i++){
+    othello[std::get<1>(puttable[i])][std::get<0>(puttable[i])] = 3;
+  }
+}
+
+void Othello::depenetratePuttable(){
+  int i, j;
+  for(i = 0;i < 8;i++){
+    for(j = 0;j < 8;j++){
+      if(othello[i][j] == 3){
+        othello[i][j] = 0;
+      }
+    }
   }
 }
