@@ -1,11 +1,3 @@
-//
-//  Othello.hpp
-//  Othello
-//
-//  Created by 薩田和弘 on 2017/02/23.
-//  Copyright © 2017年 Kazuhiro S. All rights reserved.
-//
-
 #ifndef Othello_hpp
 #define Othello_hpp
 
@@ -18,9 +10,11 @@ public:
 private:
   static Othello *instance;
   Player *player1, *player2;
-  
+  int othello[8][8];
+
   Othello();
   void mainLoop();
+  void printOthello();
 };
 
 #endif /* Othello_hpp */
