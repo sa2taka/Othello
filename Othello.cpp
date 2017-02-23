@@ -46,6 +46,7 @@ std::vector<std::tuple<int, int>> Othello::getPuttable(int Othello[8][8], int no
 void Othello::mainLoop(){
   //while(true){
   system("clear");
+  turnOverStone(5, 4);
   auto puttablePoint = getPuttable(othello, nowColor);
   penetratePuttable(puttablePoint);
   printOthello();
@@ -57,17 +58,17 @@ void Othello::printOthello(){
   /*
   int i, j;
   for(i = 0;i < 8;i++){
-    for(j = 0;j < 8;j++){
-      switch(othello[i][j]){
-        case 0: printf(" "); break;
-        case 1: printf("O"); break;
-        case 2: printf("X"); break;
-        case 3: printf("*"); break;
-      }
-    }
-    printf("\n");
-  }
-  */
+  for(j = 0;j < 8;j++){
+  switch(othello[i][j]){
+  case 0: printf(" "); break;
+  case 1: printf("O"); break;
+  case 2: printf("X"); break;
+  case 3: printf("*"); break;
+}
+}
+printf("\n");
+}
+*/
   int i, j;
   char showOthello[8][8];
   for(i = 0;i < 8;i++){
@@ -80,25 +81,28 @@ void Othello::printOthello(){
       }
     }
   }
-	printf("      ");
-	for(j = 0;j < 8;j++)
-		printf(" %d  ", j + 1);
-	putchar('\n');
-	printf("     ");
-	for(j = 0;j < 8;j++)
-		printf("----");
-	puts("-");
-	for(i = 0;i < 8;i++)
-	{
-		printf("  %2d |",i + 1);
-		for(j = 0;j < 8;j++)
-			printf(" %c |",showOthello[i][j]);
-		putchar('\n');
-		printf("     ");
-		for(j = 0;j < 8;j++)
-			printf("----");
-		puts("-");
-	}
+  printf("      ");
+  for(j = 0;j < 8;j++){
+    printf(" %d  ", j + 1);
+  }
+  putchar('\n');
+  printf("     ");
+  for(j = 0;j < 8;j++){
+    printf("----");
+  }
+  puts("-");
+  for(i = 0;i < 8;i++){
+    printf("  %2d |",i + 1);
+    for(j = 0;j < 8;j++){
+      printf(" %c |",showOthello[i][j]);
+    }
+    putchar('\n');
+    printf("     ");
+    for(j = 0;j < 8;j++){
+      printf("----");
+    }
+    puts("-");
+  }
 }
 
 bool Othello::isPuttable(int othello[8][8], int x, int y, int nowColor){
@@ -166,6 +170,40 @@ void Othello::depenetratePuttable(){
     for(j = 0;j < 8;j++){
       if(othello[i][j] == 3){
         othello[i][j] = 0;
+      }
+    }
+  }
+}
+
+void Othello::turnOverStone(int x, int y){
+  int i;
+  int tempX, tempY;
+  int wayX = 0, wayY = 0;
+
+  othello[y][x] = nowColor;
+  for(i = 0;i < 8;i++){
+    switch(i){
+      case 0: wayX = 0; wayY = -1; break;
+      case 1: wayX = 1; wayY = -1; break;
+      case 2: wayX = 1; wayY = 0;break;
+      case 3: wayX = 1; wayY = 1; break;
+      case 4: wayX = 0; wayY = 1; break;
+      case 5: wayX = -1; wayY = 1; break;
+      case 6: wayX = -1; wayY = 0;break;
+      case 7: wayX = -1; wayY = -1; break;
+    }
+    tempX = x;
+    tempY = y;
+    if(isPuttableLine(othello, x, y, nowColor, wayX, wayY)){
+      while(true){
+        tempX += wayX;
+        tempY += wayY;
+        if(othello[tempY][tempX] == nowColor){
+          break;
+        }
+        else{
+          othello[tempY][tempX] = nowColor;
+        }
       }
     }
   }

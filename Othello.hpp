@@ -24,6 +24,7 @@ private:
   bool isPuttableLine(int othello[8][8], int x, int y, int nowColor, int wayX, int wayY);
   void penetratePuttable(std::vector<std::tuple<int, int>> puttable);
   void depenetratePuttable();
+  void turnOverStone(int x, int y);
 };
 
 #endif /* Othello_hpp */
