@@ -44,14 +44,37 @@ std::vector<std::tuple<int, int>> Othello::getPuttable(int Othello[8][8], int no
 }
 
 void Othello::mainLoop(){
-  //while(true){
-  system("clear");
-  turnOverStone(5, 4);
-  auto puttablePoint = getPuttable(othello, nowColor);
-  penetratePuttable(puttablePoint);
-  printOthello();
-  depenetratePuttable();
-  //}
+  std::tuple<int, int> putPoint;
+  int i;
+  while(true){
+    system("clear");
+    auto puttablePoint = getPuttable(othello, nowColor);
+    //  置ける場所を表示するための処理
+    penetratePuttable(puttablePoint);
+    printOthello(); //  ここで表示
+    depenetratePuttable();
+
+    if(nowColor == 1){
+      putPoint = player1->putStone();
+    }
+    else{
+      putPoint = player2->putStone();
+    }
+
+    bool isPuttablePoint = false;
+    for(i = 0;i < puttablePoint.size();i++){
+      if(puttablePoint[i] == putPoint){
+        isPuttablePoint = true;
+        break;
+      }
+    }
+    if(!isPuttablePoint){
+      continue;
+    }
+
+    turnOverStone(std::get<0>(putPoint), std::get<1>(putPoint));
+    nowColor = nowColor == 1 ? 2 : 1;
+  }
 }
 
 void Othello::printOthello(){

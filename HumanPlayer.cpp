@@ -4,8 +4,8 @@
 
 std::tuple<int, int> HumanPlayer::putStone(){
   int x, y;
+  printf("please write put point(ex.4 5)\n");
   std::cin >> x >> y;
-  printf("%d, %d\n", x, y);
   x--;
   y--;
   return std::make_tuple(x, y);

@@ -15,7 +15,7 @@ private:
   static Othello *instance;
   Player *player1, *player2;
   int othello[8][8];
-  int nowColor = 2;
+  int nowColor = 1;
 
   Othello();
   void mainLoop();
