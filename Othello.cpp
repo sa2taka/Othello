@@ -54,6 +54,7 @@ void Othello::mainLoop(){
 }
 
 void Othello::printOthello(){
+  /*
   int i, j;
   for(i = 0;i < 8;i++){
     for(j = 0;j < 8;j++){
@@ -66,15 +67,44 @@ void Othello::printOthello(){
     }
     printf("\n");
   }
+  */
+  int i, j;
+  char showOthello[8][8];
+  for(i = 0;i < 8;i++){
+    for(j = 0;j < 8;j++){
+      switch(othello[i][j]){
+        case 0: showOthello[i][j] = ' '; break;
+        case 1: showOthello[i][j] = 'O'; break;
+        case 2: showOthello[i][j] = 'X'; break;
+        case 3: showOthello[i][j] = '*'; break;
+      }
+    }
+  }
+	printf("      ");
+	for(j = 0;j < 8;j++)
+		printf(" %d  ", j + 1);
+	putchar('\n');
+	printf("     ");
+	for(j = 0;j < 8;j++)
+		printf("----");
+	puts("-");
+	for(i = 0;i < 8;i++)
+	{
+		printf("  %2d |",i + 1);
+		for(j = 0;j < 8;j++)
+			printf(" %c |",showOthello[i][j]);
+		putchar('\n');
+		printf("     ");
+		for(j = 0;j < 8;j++)
+			printf("----");
+		puts("-");
+	}
 }
 
 bool Othello::isPuttable(int othello[8][8], int x, int y, int nowColor){
   int i;
-  int tempX = 0, tempY = 0;
   int wayX = 0, wayY = 0;
-  int anotherColor = nowColor == 1 ? 2 : 1;
   bool res = false;
-  bool differentFlag = false;
   for(i = 0;i < 8;i++){
     switch(i){
       case 0: wayX = 0; wayY = -1; break;
@@ -86,28 +116,38 @@ bool Othello::isPuttable(int othello[8][8], int x, int y, int nowColor){
       case 6: wayX = -1; wayY = 0;break;
       case 7: wayX = -1; wayY = -1; break;
     }
-    tempX = x;
-    tempY = y;
-    differentFlag = false;
-    while(true){
-      if(tempX + wayX < 0 || tempX + wayX > 7){
-        break;
-      }
-      tempX += wayX;
-      if(tempY + wayY < 0 || tempY + wayY > 7){
-        break;
-      }
-      tempY += wayY;
-      if(differentFlag == false && othello[tempY][tempX] != anotherColor){
-        break;
-      }
-      if(differentFlag == true && othello[tempY][tempX] == nowColor){
-        res = true;
-        break;
-      }
-      if(othello[tempY][tempX] == anotherColor){
-        differentFlag = true;
-      }
+    res = isPuttableLine(othello, x, y, nowColor, wayX, wayY);
+    if(res){
+      break;
+    }
+  }
+  return res;
+}
+
+bool Othello::isPuttableLine(int othello[8][8], int x, int y, int nowColor, int wayX, int wayY){
+  int tempX = x, tempY = y;
+  int anotherColor = nowColor == 1 ? 2 : 1;
+  bool differentFlag = false;
+  bool res = false;
+
+  while(true){
+    if(tempX + wayX < 0 || tempX + wayX > 7){
+      break;
+    }
+    tempX += wayX;
+    if(tempY + wayY < 0 || tempY + wayY > 7){
+      break;
+    }
+    tempY += wayY;
+    if(differentFlag == false && othello[tempY][tempX] != anotherColor){
+      break;
+    }
+    if(differentFlag == true && othello[tempY][tempX] == nowColor){
+      res = true;
+      break;
+    }
+    if(othello[tempY][tempX] == anotherColor){
+      differentFlag = true;
     }
   }
   return res;

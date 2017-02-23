@@ -21,6 +21,7 @@ private:
   void mainLoop();
   void printOthello();
   bool isPuttable(int othello[8][8], int x, int y, int nowColor);
+  bool isPuttableLine(int othello[8][8], int x, int y, int nowColor, int wayX, int wayY);
   void penetratePuttable(std::vector<std::tuple<int, int>> puttable);
   void depenetratePuttable();
 };
