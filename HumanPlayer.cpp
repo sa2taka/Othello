@@ -4,7 +4,7 @@
 
 std::tuple<int, int> HumanPlayer::putStone(){
   int x, y;
-  printf("please write put point(ex.4 5)\n");
+  printf("Xvalue_Yvalue(ex.'4 5')\n");
   std::cin >> x >> y;
   x--;
   y--;

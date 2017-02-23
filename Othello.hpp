@@ -11,11 +11,13 @@ public:
   void start(Player *player1, Player *player2);
   int getNowColor();
   std::vector<std::tuple<int, int>> getPuttable(int othello[8][8], int nowColor);
+  int countEmptyArea();
 private:
   static Othello *instance;
   Player *player1, *player2;
   int othello[8][8];
   int nowColor = 1;
+  bool beforePlayerPassFlag;
 
   Othello();
   void mainLoop();
@@ -25,6 +27,7 @@ private:
   void penetratePuttable(std::vector<std::tuple<int, int>> puttable);
   void depenetratePuttable();
   void turnOverStone(int x, int y);
+  int searchWinner();
 };
 
 #endif /* Othello_hpp */

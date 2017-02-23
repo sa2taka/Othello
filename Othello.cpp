@@ -14,6 +14,8 @@ Othello::Othello(){
   othello[3][4] = 2;
   othello[4][3] = 2;
   othello[4][4] = 1;
+
+  beforePlayerPassFlag = false;
 }
 
 Othello *Othello::getInstance(){
@@ -43,21 +45,52 @@ std::vector<std::tuple<int, int>> Othello::getPuttable(int Othello[8][8], int no
   return res;
 }
 
+int Othello::countEmptyArea(){
+  int res = 0;
+  int i, j;
+  for(i = 0;i < 8;i++){
+    for(j = 0;j < 8;j++){
+      res += othello[i][j] == 0 ? 1 : 0;
+    }
+  }
+  return res;
+}
+
 void Othello::mainLoop(){
   std::tuple<int, int> putPoint;
   int i;
   while(true){
     system("clear");
     auto puttablePoint = getPuttable(othello, nowColor);
+
     //  置ける場所を表示するための処理
     penetratePuttable(puttablePoint);
     printOthello(); //  ここで表示
     depenetratePuttable();
 
+    int count = countEmptyArea();
+    printf("    Now Turn : %d\n", 60 - count);
+    if(count == 0){
+      break;
+    }
+
+    if(puttablePoint.size() == 0 && beforePlayerPassFlag){
+      break;
+    }
+    else if(puttablePoint.size() == 0){
+      beforePlayerPassFlag = true;
+      nowColor = nowColor == 1 ? 2 : 1;
+      continue;
+    }
+
+    beforePlayerPassFlag = false;
+
     if(nowColor == 1){
+      printf("    Player1's turn\n");
       putPoint = player1->putStone();
     }
     else{
+      printf("    Player2's turn\n");
       putPoint = player2->putStone();
     }
 
@@ -74,6 +107,13 @@ void Othello::mainLoop(){
 
     turnOverStone(std::get<0>(putPoint), std::get<1>(putPoint));
     nowColor = nowColor == 1 ? 2 : 1;
+  }
+  int winner = searchWinner();
+  if(winner == 0){
+    printf("This game end in a draw\n");
+  }
+  else{
+    printf("Player%d win!", winner);
   }
 }
 
@@ -232,5 +272,25 @@ void Othello::turnOverStone(int x, int y){
         }
       }
     }
+  }
+}
+
+int Othello::searchWinner(){
+  int i, j;
+  int player1Count = 0, player2Count = 0;
+  for(i = 0;i < 8;i++){
+    for(j = 0;j < 8;j++){
+      player1Count += othello[i][j] == 1 ? 1 : 0;
+      player2Count += othello[i][j] == 2 ? 1 : 0;
+    }
+  }
+  if(player1Count > player2Count){
+    return 1;
+  }
+  else if(player1Count < player2Count){
+    return 2;
+  }
+  else{
+    return 0;
   }
 }
