@@ -31,6 +31,7 @@ std::tuple<int, int> ComputerPlayer::putStone(){
     if(temp.size() < minimumSize){
       minimumPuttableLocations.clear();
       minimumPuttableLocations.push_back(i);
+      minimumSize = temp.size();
     }
     else if(temp.size() == minimumSize){
       minimumPuttableLocations.push_back(i);
