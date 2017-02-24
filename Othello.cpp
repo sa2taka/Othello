@@ -4,18 +4,7 @@
 
 Othello *Othello::instance = new Othello();
 Othello::Othello(){
-  int i, j;
-  for(i = 0;i < 8;i++){
-    for(j = 0;j < 8;j++){
-      othello[i][j] = 0;
-    }
-  }
-  othello[3][3] = 1;
-  othello[3][4] = 2;
-  othello[4][3] = 2;
-  othello[4][4] = 1;
-
-  beforePlayerPassFlag = false;
+  init();
 }
 
 Othello *Othello::getInstance(){
@@ -23,16 +12,13 @@ Othello *Othello::getInstance(){
 }
 
 void Othello::start(Player *player1, Player *player2){
+  init();
   this->player1 = player1;
   this->player2 = player2;
   mainLoop();
 }
 
-int Othello::getNowColor(){
-  return nowColor;
-}
-
-std::vector<std::tuple<int, int>> Othello::getPuttable(int Othello[8][8], int nowColor){
+std::vector<std::tuple<int, int>> Othello::getPuttable(int othello[8][8], int nowColor){
   int i, j;
   std::vector<std::tuple<int, int>> res;
   for(i = 0;i < 8;i++){
@@ -54,6 +40,55 @@ int Othello::countEmptyArea(){
     }
   }
   return res;
+}
+
+void Othello::turnOverStone(int x, int y, int othello[8][8], int nowColor){
+  int i;
+  int tempX, tempY;
+  int wayX = 0, wayY = 0;
+
+  othello[y][x] = nowColor;
+  for(i = 0;i < 8;i++){
+    switch(i){
+      case 0: wayX = 0; wayY = -1; break;
+      case 1: wayX = 1; wayY = -1; break;
+      case 2: wayX = 1; wayY = 0;break;
+      case 3: wayX = 1; wayY = 1; break;
+      case 4: wayX = 0; wayY = 1; break;
+      case 5: wayX = -1; wayY = 1; break;
+      case 6: wayX = -1; wayY = 0;break;
+      case 7: wayX = -1; wayY = -1; break;
+    }
+    tempX = x;
+    tempY = y;
+    if(isPuttableLine(othello, x, y, nowColor, wayX, wayY)){
+      while(true){
+        tempX += wayX;
+        tempY += wayY;
+        if(othello[tempY][tempX] == nowColor){
+          break;
+        }
+        else{
+          othello[tempY][tempX] = nowColor;
+        }
+      }
+    }
+  }
+}
+
+void Othello::init(){
+  int i, j;
+  for(i = 0;i < 8;i++){
+    for(j = 0;j < 8;j++){
+      othello[i][j] = 0;
+    }
+  }
+  othello[3][3] = 1;
+  othello[3][4] = 2;
+  othello[4][3] = 2;
+  othello[4][4] = 1;
+
+  beforePlayerPassFlag = false;
 }
 
 void Othello::mainLoop(){
@@ -105,7 +140,7 @@ void Othello::mainLoop(){
       continue;
     }
 
-    turnOverStone(std::get<0>(putPoint), std::get<1>(putPoint));
+    turnOverStone(std::get<0>(putPoint), std::get<1>(putPoint), othello, nowColor);
     nowColor = nowColor == 1 ? 2 : 1;
   }
   int winner = searchWinner();
@@ -236,40 +271,6 @@ void Othello::depenetratePuttable(){
     for(j = 0;j < 8;j++){
       if(othello[i][j] == 3){
         othello[i][j] = 0;
-      }
-    }
-  }
-}
-
-void Othello::turnOverStone(int x, int y){
-  int i;
-  int tempX, tempY;
-  int wayX = 0, wayY = 0;
-
-  othello[y][x] = nowColor;
-  for(i = 0;i < 8;i++){
-    switch(i){
-      case 0: wayX = 0; wayY = -1; break;
-      case 1: wayX = 1; wayY = -1; break;
-      case 2: wayX = 1; wayY = 0;break;
-      case 3: wayX = 1; wayY = 1; break;
-      case 4: wayX = 0; wayY = 1; break;
-      case 5: wayX = -1; wayY = 1; break;
-      case 6: wayX = -1; wayY = 0;break;
-      case 7: wayX = -1; wayY = -1; break;
-    }
-    tempX = x;
-    tempY = y;
-    if(isPuttableLine(othello, x, y, nowColor, wayX, wayY)){
-      while(true){
-        tempX += wayX;
-        tempY += wayY;
-        if(othello[tempY][tempX] == nowColor){
-          break;
-        }
-        else{
-          othello[tempY][tempX] = nowColor;
-        }
       }
     }
   }

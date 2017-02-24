@@ -1,10 +1,11 @@
 #include "HumanPlayer.hpp"
+#include "ComputerPlayer.hpp"
 #include "Othello.hpp"
 #include <iostream>
 
 int main(int argc, const char * argv[]) {
   HumanPlayer *player1 = new HumanPlayer();
-  HumanPlayer *player2 = new HumanPlayer();
+  ComputerPlayer *player2 = new ComputerPlayer();
   Othello *othello = Othello::getInstance();
 
   othello->start(player1, player2);
