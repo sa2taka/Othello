@@ -10,7 +10,7 @@ public:
 private:
   void copyOthelloArray(int copiedArray[8][8], int copyArray[8][8]);
   std::tuple<int, int> decideByNormalWay();
-  std::tuple<int, int> decideBySearchWay(int othello[8][8], int nowColor);
+  std::tuple<int, int> decideBySearchWay();
   double searchWay(std::tuple<int, int> puttablePoints, int ohtello[8][8], int nowColor);
 };
 

@@ -13,7 +13,7 @@ std::tuple<int, int> ComputerPlayer::putStone(){
     res = decideByNormalWay();
   }
   else{
-    decideBySearchWay(othello, nowColor);
+    decideBySearchWay();
   }
 
   return res;
@@ -82,28 +82,43 @@ std::tuple<int, int> ComputerPlayer::decideBySearchWay(){
   }
 }
 
-double ComputerPlayer::searchWay(std::tuple<int, int> puttablePoints,
-                                int ohtello[8][8],
+double ComputerPlayer::searchWay(std::tuple<int, int> puttablePoint,
+                                int othello[8][8],
                                 int nowColor){
   auto *othelloInstance = Othello::getInstance();
   int tempOthello[8][8];
   copyOthelloArray(othello, tempOthello);
   int anotherColor = nowColor == 1 ? 2 : 1;
-  double totalPercent 0;
+  double totalPercent = 0;
+  bool gameFinishFlag = false;
 
-  othelloInstance->turnOverStone(std::get<0>(puttablePoint[i]),
-                                  std::get<1>(puttablePoint[i]),
+  othelloInstance->turnOverStone(std::get<0>(puttablePoint),
+                                  std::get<1>(puttablePoint),
                                   tempOthello,
-                                  anotherColor);
+                                  nowColor);
 
   // 変更後における場所を取得
-  auto puttablePoint = othelloInstance->getPuttable(othello, nowColor);
+  auto puttablePoints = othelloInstance->getPuttable(tempOthello, anotherColor);
+  if(puttablePoints.size() == 0){
+    puttablePoints = othelloInstance->getPuttable(tempOthello, nowColor);
+    if(puttablePoints.size() == 0){
+      gameFinishFlag = true;
+    }
+  }
+  if(othelloInstance->countEmptyArea(tempOthello) == 0 || gameFinishFlag){
+    int *return1, *return2;
+    if(othelloInstance->searchWinner(return1, return2) == othelloInstance->nowColor){
+      return 1;
+    }
+    else{
+      return 0;
+    }
+  }
+  gameFinishFlag = false;
 
-  if(ohtelloInstance->countEmptyArea()){
-
+  for(int i = 0;i < puttablePoints.size();i++){
+    totalPercent += searchWay(puttablePoints[i], tempOthello, anotherColor);
   }
 
-  for(int i = 0;i < puttablePoint.size();i++){
-
-  }
+  return totalPercent / puttablePoints.size();
 }
