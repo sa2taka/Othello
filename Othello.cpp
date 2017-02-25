@@ -76,6 +76,26 @@ void Othello::turnOverStone(int x, int y, int othello[8][8], int nowColor){
   }
 }
 
+int Othello::searchWinner(int *return1, int *return2){
+  int i, j;
+  for(i = 0;i < 8;i++){
+    for(j = 0;j < 8;j++){
+      *return1 += othello[i][j] == 1 ? 1 : 0;
+      *return2 += othello[i][j] == 2 ? 1 : 0;
+    }
+  }
+  if(*return1 > *return2){
+    return 1;
+  }
+  else if(*return1 < *return2){
+    return 2;
+  }
+  else{
+    return 0;
+  }
+}
+
+
 void Othello::init(){
   int i, j;
   for(i = 0;i < 8;i++){
@@ -277,24 +297,5 @@ void Othello::depenetratePuttable(){
         othello[i][j] = 0;
       }
     }
-  }
-}
-
-int Othello::searchWinner(int *return1, int *return2){
-  int i, j;
-  for(i = 0;i < 8;i++){
-    for(j = 0;j < 8;j++){
-      *return1 += othello[i][j] == 1 ? 1 : 0;
-      *return2 += othello[i][j] == 2 ? 1 : 0;
-    }
-  }
-  if(*return1 > *return2){
-    return 1;
-  }
-  else if(*return1 < *return2){
-    return 2;
-  }
-  else{
-    return 0;
   }
 }

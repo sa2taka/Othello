@@ -7,8 +7,9 @@ class ComputerPlayer : public Player{
 public:
   virtual std::tuple<int, int> putStone();
 private:
-  void copyOthello(int othello[8][8]);
+  void copyOthelloArray(int copiedArray[8][8], int copyArray[8][8]);
   std::tuple<int, int> decideByNormalWay();
+  std::tuple<int, int> decideBySearchWay(int othello[8][8], int nowColor);
 };
 
 #endif /* Computer_hpp */
