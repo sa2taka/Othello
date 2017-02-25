@@ -9,13 +9,10 @@ std::tuple<int, int> ComputerPlayer::putStone(){
   auto *othelloInstance = Othello::getInstance();
   std::tuple<int, int> res;
 
-  if(othelloInstance->countEmptyArea() > 0){
+  if(othelloInstance->countEmptyArea(othelloInstance->othello) > 0){
     res = decideByNormalWay();
   }
   else{
-    int othello[8][8];
-    int nowColor = othelloInstance->nowColor;
-    copyOthelloArray(othelloInstance->othello, othello);
     decideBySearchWay(othello, nowColor);
   }
 
@@ -71,21 +68,42 @@ std::tuple<int, int> ComputerPlayer::decideByNormalWay(){
   return puttablePoint[minimumPuttableLocations[returnRef]];
 }
 
-std::tuple<int, int> ComputerPlayer::decideBySearchWay(int othello[8][8], int nowColor){
-  int i, j;
+std::tuple<int, int> ComputerPlayer::decideBySearchWay(){
   auto *othelloInstance = Othello::getInstance();
-  int anotherColor = nowColor == 1 ? 2 : 1;
-  auto puttablePoint = othelloInstance->getPuttable(othello, nowColor);
-  int tempOthello[8][8];
+  int othello[8][8];
+  int nowColor = othelloInstance->nowColor;
+  copyOthelloArray(othelloInstance->othello, othello);
 
-  for(i = 0;i < 8;i++){
-    for(j = 0;j < 8;j++){
-      tempOthello[i][j] = othello[i][j];
-    }
+  auto puttablePoint = othelloInstance->getPuttable(othello, nowColor);
+  int maxmizePercent = 0;
+
+  for(int i = 0;i < puttablePoint.size();i++){
+    double percent = searchWay(puttablePoint[i], othello, nowColor);
+  }
+}
+
+double ComputerPlayer::searchWay(std::tuple<int, int> puttablePoints,
+                                int ohtello[8][8],
+                                int nowColor){
+  auto *othelloInstance = Othello::getInstance();
+  int tempOthello[8][8];
+  copyOthelloArray(othello, tempOthello);
+  int anotherColor = nowColor == 1 ? 2 : 1;
+  double totalPercent 0;
+
+  othelloInstance->turnOverStone(std::get<0>(puttablePoint[i]),
+                                  std::get<1>(puttablePoint[i]),
+                                  tempOthello,
+                                  anotherColor);
+
+  // 変更後における場所を取得
+  auto puttablePoint = othelloInstance->getPuttable(othello, nowColor);
+
+  if(ohtelloInstance->countEmptyArea()){
+
   }
 
-  //  再帰的に呼び出して、最もかつ確率が高い手を選ぶ
-  for(i = 0;i < puttablePoint.size();i++){
-    othelloInstance->turnOverStone(std::get<0>(puttablePoint[i]), std::get<1>(puttablePoint[i]), othello, nowColor);
+  for(int i = 0;i < puttablePoint.size();i++){
+
   }
 }

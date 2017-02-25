@@ -12,7 +12,7 @@ public:
 
   void start(Player *player1, Player *player2);
   std::vector<std::tuple<int, int>> getPuttable(int othello[8][8], int nowColor);
-  int countEmptyArea();
+  int countEmptyArea(int othello[8][8]);
   void turnOverStone(int x, int y, int othello[8][8], int nowColor);
   int searchWinner(int *return1, int *return2);
 private:

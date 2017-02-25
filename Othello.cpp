@@ -31,7 +31,7 @@ std::vector<std::tuple<int, int>> Othello::getPuttable(int othello[8][8], int no
   return res;
 }
 
-int Othello::countEmptyArea(){
+int Othello::countEmptyArea(int otello[8][8]){
   int res = 0;
   int i, j;
   for(i = 0;i < 8;i++){
@@ -123,7 +123,7 @@ void Othello::mainLoop(){
     printOthello(); //  ここで表示
     depenetratePuttable();
 
-    int count = countEmptyArea();
+    int count = countEmptyArea(othello);
     printf("    Now Turn : %d\n", 60 - count);
     if(count == 0){
       break;
