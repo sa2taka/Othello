@@ -1,4 +1,4 @@
-COMPILER  = c++
+COMPILER  = clang++
 CFLAGS    = -std=c++11 -stdlib=libc++ -Wall
 ifeq "$(shell getconf LONG_BIT)" "64"
   LDFLAGS =

@@ -19,7 +19,7 @@ std::tuple<int, int> ComputerPlayer::putStone(){
   return res;
 }
 
-void copyOthelloArray(int copiedArray[8][8], int copyArray[8][8]){
+void ComputerPlayer::copyOthelloArray(int copiedArray[8][8], int copyArray[8][8]){
   int x, y;
   for(y = 0;y < 8;y++){
     for(x = 0;x < 8;x++){
@@ -74,15 +74,22 @@ std::tuple<int, int> ComputerPlayer::decideBySearchWay(){
   int nowColor = othelloInstance->nowColor;
   copyOthelloArray(othelloInstance->othello, othello);
 
-  auto puttablePoint = othelloInstance->getPuttable(othello, nowColor);
-  int maxmizePercent = 0;
+  auto puttablePoints = othelloInstance->getPuttable(othello, nowColor);
+  double maxmizePercent = 0;
+  int maxmizePercentLocation = 0;
 
-  for(int i = 0;i < puttablePoint.size();i++){
-    double percent = searchWay(puttablePoint[i], othello, nowColor);
+  for(int i = 0;i < puttablePoints.size();i++){
+    double percent = getWinPercent(puttablePoints[i], othello, nowColor);
+    if(percent > maxmizePercent){
+      maxmizePercent = percent;
+      maxmizePercentLocation = i;
+    }
   }
+
+  return puttablePoints[maxmizePercentLocation];
 }
 
-double ComputerPlayer::searchWay(std::tuple<int, int> puttablePoint,
+double ComputerPlayer::getWinPercent(std::tuple<int, int> puttablePoint,
                                 int othello[8][8],
                                 int nowColor){
   auto *othelloInstance = Othello::getInstance();
@@ -106,8 +113,8 @@ double ComputerPlayer::searchWay(std::tuple<int, int> puttablePoint,
     }
   }
   if(othelloInstance->countEmptyArea(tempOthello) == 0 || gameFinishFlag){
-    int *return1, *return2;
-    if(othelloInstance->searchWinner(return1, return2) == othelloInstance->nowColor){
+    int return1, return2;
+    if(othelloInstance->searchWinner(&return1, &return2) == othelloInstance->nowColor){
       return 1;
     }
     else{
@@ -117,7 +124,7 @@ double ComputerPlayer::searchWay(std::tuple<int, int> puttablePoint,
   gameFinishFlag = false;
 
   for(int i = 0;i < puttablePoints.size();i++){
-    totalPercent += searchWay(puttablePoints[i], tempOthello, anotherColor);
+    totalPercent += getWinPercent(puttablePoints[i], tempOthello, anotherColor);
   }
 
   return totalPercent / puttablePoints.size();

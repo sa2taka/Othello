@@ -78,6 +78,8 @@ void Othello::turnOverStone(int x, int y, int othello[8][8], int nowColor){
 
 int Othello::searchWinner(int *return1, int *return2){
   int i, j;
+  *return1 = 0;
+  *return2 = 0;
   for(i = 0;i < 8;i++){
     for(j = 0;j < 8;j++){
       *return1 += othello[i][j] == 1 ? 1 : 0;
@@ -166,8 +168,6 @@ void Othello::mainLoop(){
   int return1, return2;
   int winner = searchWinner(&return1, &return2);
   printf("   Player1 %d:%d Player2\n", return1, return2);
-  return1 = 0;
-  return2 = 0;
   if(winner == 0){
     printf("   This game end in a draw\n");
   }
