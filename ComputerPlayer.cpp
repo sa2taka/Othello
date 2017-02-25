@@ -3,14 +3,37 @@
 #include "util.hpp"
 #include <iostream>
 #include <stdio.h>
+#include <unistd.h>
 
 std::tuple<int, int> ComputerPlayer::putStone(){
+  auto *othelloInstance = Othello::getInstance();
+  std::tuple<int, int> res;
+
+  if(othelloInstance->countEmptyArea() > 0){
+    res = decideByNormalWay();
+  }
+
+  return res;
+}
+
+void ComputerPlayer::copyOthello(int othello[8][8]){
+  int x, y;
+  auto *othelloInstance = Othello::getInstance();
+  for(y = 0;y < 8;y++){
+    for(x = 0;x < 8;x++){
+      othello[y][x] = othelloInstance->othello[y][x];
+    }
+  }
+}
+
+
+std::tuple<int, int> ComputerPlayer::decideByNormalWay(){
   int i;
   int minimumSize = 0;
   std::vector<int> minimumPuttableLocations;
   int othello[8][8];
 
-  Othello *othelloInstance = Othello::getInstance();
+  auto *othelloInstance = Othello::getInstance();
   int nowColor = othelloInstance->nowColor;
   int anotherColor = othelloInstance->nowColor == 1 ? 2 : 1;
   copyOthello(othello);
@@ -39,15 +62,6 @@ std::tuple<int, int> ComputerPlayer::putStone(){
   }
 
   int returnRef = util::createRandomNum(0, minimumPuttableLocations.size() - 1);
-  return puttablePoint[minimumPuttableLocations[returnRef]];
-}
 
-void ComputerPlayer::copyOthello(int othello[8][8]){
-  int x, y;
-  Othello *othelloInstance = Othello::getInstance();
-  for(y = 0;y < 8;y++){
-    for(x = 0;x < 8;x++){
-      othello[y][x] = othelloInstance->othello[y][x];
-    }
-  }
+  return puttablePoint[minimumPuttableLocations[returnRef]];
 }

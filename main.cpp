@@ -2,12 +2,16 @@
 #include "ComputerPlayer.hpp"
 #include "Othello.hpp"
 #include <iostream>
+#include <unistd.h>
 
 int main(int argc, const char * argv[]) {
-  HumanPlayer *player1 = new HumanPlayer();
-  ComputerPlayer *player2 = new ComputerPlayer();
+  auto *player1 = new ComputerPlayer();
+  auto *player2 = new ComputerPlayer();
   Othello *othello = Othello::getInstance();
 
-  othello->start(player1, player2);
+  while(true){
+    othello->start(player1, player2);
+    usleep(1000000);
+  }
   return 0;
 }

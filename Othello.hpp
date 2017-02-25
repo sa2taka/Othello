@@ -28,7 +28,7 @@ private:
   bool isPuttableLine(int othello[8][8], int x, int y, int nowColor, int wayX, int wayY);
   void penetratePuttable(std::vector<std::tuple<int, int>> puttable);
   void depenetratePuttable();
-  int searchWinner();
+  int searchWinner(int *return1, int *return2);
 };
 
 #endif /* Othello_hpp */

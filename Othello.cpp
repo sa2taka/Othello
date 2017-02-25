@@ -143,12 +143,16 @@ void Othello::mainLoop(){
     turnOverStone(std::get<0>(putPoint), std::get<1>(putPoint), othello, nowColor);
     nowColor = nowColor == 1 ? 2 : 1;
   }
-  int winner = searchWinner();
+  int return1, return2;
+  int winner = searchWinner(&return1, &return2);
+  printf("   Player1 %d:%d Player2\n", return1, return2);
+  return1 = 0;
+  return2 = 0;
   if(winner == 0){
-    printf("This game end in a draw\n");
+    printf("   This game end in a draw\n");
   }
   else{
-    printf("Player%d win!", winner);
+    printf("   Player%d win!\n", winner);
   }
 }
 
@@ -276,19 +280,18 @@ void Othello::depenetratePuttable(){
   }
 }
 
-int Othello::searchWinner(){
+int Othello::searchWinner(int *return1, int *return2){
   int i, j;
-  int player1Count = 0, player2Count = 0;
   for(i = 0;i < 8;i++){
     for(j = 0;j < 8;j++){
-      player1Count += othello[i][j] == 1 ? 1 : 0;
-      player2Count += othello[i][j] == 2 ? 1 : 0;
+      *return1 += othello[i][j] == 1 ? 1 : 0;
+      *return2 += othello[i][j] == 2 ? 1 : 0;
     }
   }
-  if(player1Count > player2Count){
+  if(*return1 > *return2){
     return 1;
   }
-  else if(player1Count < player2Count){
+  else if(*return1 < *return2){
     return 2;
   }
   else{
